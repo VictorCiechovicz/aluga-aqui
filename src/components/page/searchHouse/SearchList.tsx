@@ -4,6 +4,7 @@ import { Map } from './Map'
 import Image from 'next/image'
 import ImageCasa from '../../../../public/images/casa.jpg'
 import { useState } from 'react'
+import { useSession } from 'next-auth/react'
 
 export interface HousesProps {
   id: string
@@ -24,8 +25,8 @@ export function SearchList() {
   const [name, setName] = useState('')
   const [price, setPrice] = useState('')
   const [houses, setHouses] = useState<HousesProps[]>(dataTeste)
-
-
+  const session = useSession()
+console.log(session)
 
   return (
     <div className="flex justify-between p-6 gap-12">
