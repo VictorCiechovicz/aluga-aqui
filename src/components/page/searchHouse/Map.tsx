@@ -20,30 +20,43 @@ interface MapProps {
 }
 
 export function Map({ houses }: MapProps) {
-
-
   function computeAverageCoords(houses: House[]): [number, number] {
     if (houses.length === 0) return [0, 0] // Default value
 
     const total = houses.reduce(
       (acc, house) => {
-        const lat = parseFloat(house.coords[0])
-        const lng = parseFloat(house.coords[1])
+        // Guard clause for malformatted coords
+        if (!house.coords || house.coords.split(',').length !== 2) {
+          return acc
+        }
+
+        const [latStr, lngStr] = house.coords
+          .split(',')
+          .map(coord => coord.trim())
+        const lat = parseFloat(latStr)
+        const lng = parseFloat(lngStr)
+
+        // Guard clause for invalid numbers
+        if (isNaN(lat) || isNaN(lng)) {
+          return acc
+        }
 
         acc.lat += lat
         acc.lng += lng
-        return acc
+        return acc // Always return acc
       },
       { lat: 0, lng: 0 } as { lat: number; lng: number }
     )
+
     return [total.lat / houses.length, total.lng / houses.length]
   }
+
   const centerCoords = computeAverageCoords(houses)
-console.log(centerCoords)
+  console.log(centerCoords)
   return (
-    <div >
+    <div>
       <MapContainer
-           style={{ width: '950px', height: '890px' }}
+        style={{ width: '950px', height: '890px' }}
         center={[-28.263011, -53.495534]}
         zoom={13}
         scrollWheelZoom={true}
@@ -53,7 +66,13 @@ console.log(centerCoords)
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         {houses.map((house: any) => (
-          <Marker key={house.id} position={house.coords} icon={customIcon}>
+          <Marker
+            key={house.id}
+            position={house.coords
+              .split(',')
+              .map((coord:any )=> parseFloat(coord.trim()))}
+            icon={customIcon}
+          >
             <Popup>
               {house.name} <br /> {house.price}
             </Popup>

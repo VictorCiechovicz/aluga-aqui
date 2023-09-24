@@ -13,9 +13,21 @@ export const POST = async (request: Request) => {
       coords,
       images,
       userId,
+      description,
+      numberBedrooms,
+      numberBathrooms,
     } = body;
 
-    if (!name || !adress || !price || !userId || !coords) {
+    if (
+      !name ||
+      !adress ||
+      !price ||
+      !userId ||
+      !coords ||
+      !description ||
+      !numberBedrooms ||
+      !numberBathrooms
+    ) {
       return new NextResponse('Bad Request', { status: 400 });
     }
 
@@ -33,7 +45,10 @@ export const POST = async (request: Request) => {
         adress: adress,
         coords: coords,
         images: images,
-        userId: userId
+        userId: userId,
+        description:description,
+        numberBedrooms:numberBedrooms,
+        numberBathrooms:numberBathrooms,
       }
     });
 

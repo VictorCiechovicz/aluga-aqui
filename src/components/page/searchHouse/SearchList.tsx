@@ -21,8 +21,7 @@ const dataTeste = [
 ]
 
 export function SearchList({ houses }: SearchListProps) {
-  console.log(houses)
-  return (
+   return (
     <div className="flex justify-between">
       <div className="flex flex-col w-full   h-full bg-gray-100">
         <div className="h-40 bg-white shadow-md flex items-center justify-start p-4">
@@ -30,7 +29,7 @@ export function SearchList({ houses }: SearchListProps) {
         </div>
 
         <div className="flex flex-col gap-4 p-4  max-h-[730px] overflow-y-auto bg-gray-100">
-          {dataTeste.map(house => (
+          {houses.map(house => (
             <div
               key={house.id}
               className="border p-4 gap-4 bg-white rounded-lg flex justify-start"
@@ -45,7 +44,7 @@ export function SearchList({ houses }: SearchListProps) {
                   {house.name}
                 </p>
                 <p className="text-sm text-gray-500 font-normal">
-                  Rua Otto rehn
+                  {house.adress}
                 </p>
                 <p className="text-lg text-blue-500 font-semibold">
                   R$ {house.price}/mês
@@ -56,7 +55,7 @@ export function SearchList({ houses }: SearchListProps) {
         </div>
       </div>
       <div>
-        <Map houses={dataTeste} />
+        <Map houses={houses} />
       </div>
     </div>
   )
