@@ -3,47 +3,60 @@
 import { Map } from './Map'
 import Image from 'next/image'
 import ImageCasa from '../../../../public/images/casa.jpg'
-import { useState } from 'react'
-import { useSession } from 'next-auth/react'
+import { House } from '@prisma/client'
 
-export interface HousesProps {
-  id: string
-  name: string
-  price: string
-  coords: number[]
+export interface SearchListProps {
+  houses: House[]
 }
 
 const dataTeste = [
-  { id: '1', name: 'casa 1', price: '1500', coords: [-28.263011, -53.495534] },
+  { id: '1', name: 'casa 1', price: '1500', coords: [-28.289365, -53.498574] },
   { id: '2', name: 'casa 2', price: '1500', coords: [-28.263159, -53.497021] },
   { id: '3', name: 'casa 3', price: '1500', coords: [-28.263431, -53.496296] },
-  { id: '4', name: 'casa 4', price: '1500', coords: [-28.263778, -53.496569] }
+  { id: '4', name: 'casa 4', price: '1500', coords: [-28.263778, -53.496569] },
+  { id: '5', name: 'casa 1', price: '1500', coords: [-28.263011, -53.495534] },
+  { id: '6', name: 'casa 2', price: '1500', coords: [-28.263159, -53.497021] },
+  { id: '7', name: 'casa 3', price: '1500', coords: [-28.263431, -53.496296] },
+  { id: '8', name: 'casa 4', price: '1500', coords: [-28.263778, -53.496569] }
 ]
 
-export function SearchList() {
-  const [address, setAddress] = useState('')
-  const [name, setName] = useState('')
-  const [price, setPrice] = useState('')
-  const [houses, setHouses] = useState<HousesProps[]>(dataTeste)
-  const session = useSession()
-console.log(session)
-
+export function SearchList({ houses }: SearchListProps) {
+  console.log(houses)
   return (
-    <div className="flex justify-between p-6 gap-12">
- 
-      <div className="flex gap-4 flex-wrap w-full h-[700px] overflow-y-auto  ">
-        {houses.map(house => (
-          <div key={house.id} className="border p-2 ">
-            <Image alt={house.name} src={ImageCasa} className="w-64 " />
-            <div>
-              <p className="text-lg font-semibold">{house.name}</p>
-              <p className="text-xs">R${house.price}</p>
+    <div className="flex justify-between">
+      <div className="flex flex-col w-full   h-full bg-gray-100">
+        <div className="h-40 bg-white shadow-md flex items-center justify-start p-4">
+          <p>Filtros</p>
+        </div>
+
+        <div className="flex flex-col gap-4 p-4  max-h-[730px] overflow-y-auto bg-gray-100">
+          {dataTeste.map(house => (
+            <div
+              key={house.id}
+              className="border p-4 gap-4 bg-white rounded-lg flex justify-start"
+            >
+              <Image
+                alt={house.name}
+                src={ImageCasa}
+                className="w-64 rounded-lg"
+              />
+              <div>
+                <p className="text-3xl font-semibold capitalize">
+                  {house.name}
+                </p>
+                <p className="text-sm text-gray-500 font-normal">
+                  Rua Otto rehn
+                </p>
+                <p className="text-lg text-blue-500 font-semibold">
+                  R$ {house.price}/mês
+                </p>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
       <div>
-        <Map houses={houses} />
+        <Map houses={dataTeste} />
       </div>
     </div>
   )

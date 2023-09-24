@@ -5,9 +5,7 @@ import { Inter } from 'next/font/google'
 import { Toaster } from '@/components/ui/toaster'
 import { SideBar } from '@/components/SideBar'
 import AuthContext from '@/context/AuthContext'
-import { redirect } from 'next/navigation'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/app/api/auth/[...nextauth]/route'
+
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -21,6 +19,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+
 
 
   return (

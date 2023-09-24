@@ -3,10 +3,10 @@
 import { MapContainer, Marker, TileLayer } from 'react-leaflet'
 import { Popup } from 'react-leaflet'
 
-
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
-import { HousesProps } from './SearchList'
+
+import { House } from '@prisma/client'
 
 const customIcon = new L.Icon({
   iconUrl: '/images/house.svg', // URL do seu ícone personalizado
@@ -16,17 +16,22 @@ const customIcon = new L.Icon({
 })
 
 interface MapProps {
-  houses: HousesProps[]
+  houses: House[]
 }
 
 export function Map({ houses }: MapProps) {
-  function computeAverageCoords(houses: HousesProps[]): [number, number] {
+
+
+  function computeAverageCoords(houses: House[]): [number, number] {
     if (houses.length === 0) return [0, 0] // Default value
 
     const total = houses.reduce(
       (acc, house) => {
-        acc.lat += house.coords[0]
-        acc.lng += house.coords[1]
+        const lat = parseFloat(house.coords[0])
+        const lng = parseFloat(house.coords[1])
+
+        acc.lat += lat
+        acc.lng += lng
         return acc
       },
       { lat: 0, lng: 0 } as { lat: number; lng: number }
@@ -34,12 +39,12 @@ export function Map({ houses }: MapProps) {
     return [total.lat / houses.length, total.lng / houses.length]
   }
   const centerCoords = computeAverageCoords(houses)
-
+console.log(centerCoords)
   return (
-    <div>
+    <div >
       <MapContainer
-        style={{ width: '500px', height: '700px' }}
-        center={centerCoords}
+           style={{ width: '950px', height: '890px' }}
+        center={[-28.263011, -53.495534]}
         zoom={13}
         scrollWheelZoom={true}
       >

@@ -15,6 +15,10 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
+import axios from 'axios'
+import { useRouter } from 'next/navigation'
+import { ToastAction } from '@/components/ui/toast'
+import useUserInfo from '@/hook/useUserInf'
 
 const accountFormSchema = z.object({
   title: z
@@ -26,9 +30,7 @@ const accountFormSchema = z.object({
       message: 'Título máximo 10 caracteres.'
     }),
   location: z.string({ required_error: 'Informe Localização.' }),
-  CEP: z.string({
-    required_error: 'Informe CEP.'
-  }),
+
   price: z.string({ required_error: 'Informe Preço.' })
 })
 
@@ -46,6 +48,8 @@ export function AnnounceForm() {
     defaultValues
   })
   const { toast } = useToast()
+  const router = useRouter()
+  const session = useUserInfo()
 
   async function getCoordinatesFromAddress(address: any) {
     const apiKey = 'AIzaSyCXPvOLnd7oa9Hz-NZBu-f4QkkXifNBn9I'
@@ -56,10 +60,15 @@ export function AnnounceForm() {
     )
 
     const data = await response.json()
+    console.log(data)
 
     if (data.status === 'OK') {
       const location = data.results[0].geometry.location
-      return [location.lat, location.lng]
+      const formattedAddress = data.results[0].formatted_address
+      return {
+        location: [location.lat, location.lng],
+        address: formattedAddress
+      }
     } else {
       return null
     }
@@ -67,9 +76,40 @@ export function AnnounceForm() {
 
   const onSubmit = async (data: FormValues) => {
     const coords = await getCoordinatesFromAddress(data.location)
+    console.log(coords)
 
     if (coords) {
-      console.error(coords)
+      const infos = {
+        name: data.title,
+        price: data.price,
+        adress: coords.address,
+        coords: String(coords.location),
+        images: [],
+        userId: session.user?.id
+      }
+
+      axios
+        .post('/api/house', infos)
+        .then(() => {
+          toast({
+            title: 'Ebaaaa...',
+            description: 'Casa Anunciada com sucesso!',
+            variant: 'default'
+          })
+        })
+        .catch(() =>
+          toast({
+            title: 'Oops...',
+            description: 'Não foi possível realizar o anuncio',
+            variant: 'destructive',
+            action: (
+              <ToastAction altText="Tente Novamente">
+                Tente Novamente
+              </ToastAction>
+            )
+          })
+        )
+        .finally(() => router.push('/'))
     } else {
       console.error('Error getting coordinates from address.')
     }
@@ -111,20 +151,7 @@ export function AnnounceForm() {
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name="CEP"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>CEP</FormLabel>
-                <FormControl>
-                  <Input placeholder="CEP" {...field} />
-                </FormControl>
 
-                <FormMessage />
-              </FormItem>
-            )}
-          />
           <FormField
             control={form.control}
             name="price"
@@ -139,9 +166,11 @@ export function AnnounceForm() {
               </FormItem>
             )}
           />
-          <div className="w-full flex justify-end">
-            <Button type="button">Voltar</Button>
-            <Button className="bg-slate-500 text-white" type="submit">
+          <div className="w-full flex justify-end gap-2">
+            <Button type="button" variant="secondary">
+              Voltar
+            </Button>
+            <Button className="bg-blue-600 text-white" type="submit">
               Anunciar
             </Button>
           </div>
