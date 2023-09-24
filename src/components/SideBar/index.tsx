@@ -11,7 +11,7 @@ const columnAuth = [
   },
   {
     fild: 'Buscar',
-    path: '/searchHouse'
+    path: '/'
   },
   {
     fild: 'Favoritos',
@@ -30,7 +30,7 @@ const columnNoAuth = [
   },
   {
     fild: 'Buscar',
-    path: '/searchHouse'
+    path: '/'
   }
 ]
 

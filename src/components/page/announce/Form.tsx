@@ -27,8 +27,8 @@ const accountFormSchema = z.object({
     .min(5, {
       message: 'Título com mínimo 5 caracteres.'
     })
-    .max(30, {
-      message: 'Título máximo 10 caracteres.'
+    .max(50, {
+      message: 'Título máximo 50 caracteres.'
     }),
   location: z.string({ required_error: 'Informe Localização.' }),
   price: z.string({ required_error: 'Informe Preço.' }),
@@ -114,7 +114,9 @@ export function AnnounceForm() {
             )
           })
         )
-        .finally(() => router.push('/'))
+        .finally(() => {
+          router.push('/'), router.refresh()
+        })
     } else {
       console.error('Error getting coordinates from address.')
     }
@@ -217,7 +219,7 @@ export function AnnounceForm() {
                       <Input placeholder="Banheiros" {...field} />
                     </FormControl>
                     <FormDescription>
-                    Informe a quantidade de comodos do imóvel.
+                      Informe a quantidade de comodos do imóvel.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -238,7 +240,7 @@ export function AnnounceForm() {
                       <Input placeholder="Preço (R$)" {...field} />
                     </FormControl>
                     <FormDescription>
-                     Informe o valor mensal do aluguel do imóvel.
+                      Informe o valor mensal do aluguel do imóvel.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
