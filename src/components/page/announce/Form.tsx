@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -20,6 +21,7 @@ import { useRouter } from 'next/navigation'
 import { ToastAction } from '@/components/ui/toast'
 import useUserInfo from '@/hook/useUserInf'
 import { Textarea } from '@/components/ui/textarea'
+import { CldUploadButton } from 'next-cloudinary'
 
 const accountFormSchema = z.object({
   title: z
@@ -32,9 +34,16 @@ const accountFormSchema = z.object({
     }),
   location: z.string({ required_error: 'Informe Localização.' }),
   price: z.string({ required_error: 'Informe Preço.' }),
-  description: z.string({ required_error: 'Informe a Descrição.' }),
-  numberBedrooms: z.string({ required_error: 'Informe Quantido de Quartos.' }),
-  numberBathrooms: z.string({ required_error: 'Informe Quantido de Banheiro.' })
+  description: z.string({ required_error: 'Informe Quantidade de Quartos.' }),
+  numberBedrooms: z.string({
+    required_error: 'Informe Quantidade de Quartos.'
+  }),
+
+  numberBathrooms: z.string({
+    required_error: 'Informe Quantidade de Banheiros.'
+  }),
+
+  images: z.array(z.any())
 })
 
 type FormValues = z.infer<typeof accountFormSchema>
@@ -46,6 +55,8 @@ const defaultValues: Partial<FormValues> = {
 }
 
 export function AnnounceForm() {
+  const [imagesUrl, setImagesUrl] = useState<string[]>([])
+
   const form = useForm<FormValues>({
     resolver: zodResolver(accountFormSchema),
     defaultValues
@@ -76,9 +87,14 @@ export function AnnounceForm() {
     }
   }
 
+  const handleUpload = (result: any) => {
+    const url = result?.info?.secure_url
+    if (url) {
+      setImagesUrl(prevUrls => [...prevUrls, url])
+    }
+  }
   const onSubmit = async (data: FormValues) => {
     const coords = await getCoordinatesFromAddress(data.location)
-    console.log(coords)
 
     if (coords) {
       const infos = {
@@ -86,7 +102,7 @@ export function AnnounceForm() {
         price: data.price,
         adress: coords.address,
         coords: String(coords.location),
-        images: [],
+        images: imagesUrl,
         userId: session.user?.id,
         description: data.description,
         numberBedrooms: data.numberBedrooms,
@@ -246,6 +262,22 @@ export function AnnounceForm() {
                   </FormItem>
                 )}
               />
+            </div>
+
+            <div className="border rounded-lg">
+              <div className="border bg-gray-100 p-1">
+                <p className="font-semibold text-lg">Fotos</p>
+              </div>
+
+              <CldUploadButton
+                onUpload={handleUpload}
+                uploadPreset="fimxfjhg"
+                className="p-2"
+              >
+                <Button className="bg-blue-900  text-white">
+                  Carregar Fotos
+                </Button>
+              </CldUploadButton>
             </div>
 
             <div className="w-full flex justify-end gap-2">
