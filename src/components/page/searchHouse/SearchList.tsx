@@ -10,16 +10,7 @@ export interface SearchListProps {
   houses: House[]
 }
 
-const dataTeste = [
-  { id: '1', name: 'casa 1', price: '1500', coords: [-28.289365, -53.498574] },
-  { id: '2', name: 'casa 2', price: '1500', coords: [-28.263159, -53.497021] },
-  { id: '3', name: 'casa 3', price: '1500', coords: [-28.263431, -53.496296] },
-  { id: '4', name: 'casa 4', price: '1500', coords: [-28.263778, -53.496569] },
-  { id: '5', name: 'casa 1', price: '1500', coords: [-28.263011, -53.495534] },
-  { id: '6', name: 'casa 2', price: '1500', coords: [-28.263159, -53.497021] },
-  { id: '7', name: 'casa 3', price: '1500', coords: [-28.263431, -53.496296] },
-  { id: '8', name: 'casa 4', price: '1500', coords: [-28.263778, -53.496569] }
-]
+
 
 export function SearchList({ houses }: SearchListProps) {
   return (

@@ -2,9 +2,18 @@
 
 import { NextResponse } from 'next/server'
 import prisma from '@/lib/prismadb'
+import getCurrentUser from '@/actions/getCurrentUser'
 
 export const POST = async (request: Request) => {
   try {
+    const currentUser = await getCurrentUser()
+
+
+
+    if (!currentUser?.id || !currentUser.email) {
+      return new NextResponse('Unauthorized', { status: 401 });
+    }
+
     const body = await request.json()
     const {
       name,
@@ -12,7 +21,6 @@ export const POST = async (request: Request) => {
       adress,
       coords,
       images,
-      userId,
       description,
       numberBedrooms,
       numberBathrooms,
@@ -22,7 +30,7 @@ export const POST = async (request: Request) => {
       !name ||
       !adress ||
       !price ||
-      !userId ||
+
       !coords ||
       !description ||
       !numberBedrooms ||
@@ -45,10 +53,10 @@ export const POST = async (request: Request) => {
         adress: adress,
         coords: coords,
         images: images,
-        userId: userId,
-        description:description,
-        numberBedrooms:numberBedrooms,
-        numberBathrooms:numberBathrooms,
+        userId: currentUser.id,
+        description: description,
+        numberBedrooms: numberBedrooms,
+        numberBathrooms: numberBathrooms,
       }
     });
 

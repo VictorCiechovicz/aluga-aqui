@@ -19,7 +19,6 @@ import { Button } from '@/components/ui/button'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
 import { ToastAction } from '@/components/ui/toast'
-import useUserInfo from '@/hook/useUserInf'
 import { Textarea } from '@/components/ui/textarea'
 import { CldUploadButton } from 'next-cloudinary'
 
@@ -43,7 +42,7 @@ const accountFormSchema = z.object({
     required_error: 'Informe Quantidade de Banheiros.'
   }),
 
-  images: z.array(z.any())
+
 })
 
 type FormValues = z.infer<typeof accountFormSchema>
@@ -63,7 +62,6 @@ export function AnnounceForm() {
   })
   const { toast } = useToast()
   const router = useRouter()
-  const session = useUserInfo()
 
   async function getCoordinatesFromAddress(address: any) {
     const apiKey = 'AIzaSyCXPvOLnd7oa9Hz-NZBu-f4QkkXifNBn9I'
@@ -94,6 +92,7 @@ export function AnnounceForm() {
     }
   }
   const onSubmit = async (data: FormValues) => {
+  
     const coords = await getCoordinatesFromAddress(data.location)
 
     if (coords) {
@@ -103,7 +102,6 @@ export function AnnounceForm() {
         adress: coords.address,
         coords: String(coords.location),
         images: imagesUrl,
-        userId: session.user?.id,
         description: data.description,
         numberBedrooms: data.numberBedrooms,
         numberBathrooms: data.numberBathrooms
@@ -274,9 +272,11 @@ export function AnnounceForm() {
                 uploadPreset="fimxfjhg"
                 className="p-2"
               >
-                <Button className="bg-blue-900  text-white">
-                  Carregar Fotos
-                </Button>
+                <div className="bg-blue-900  p-2 rounded-md ">
+                  <p className="text-white font-medium text-md">
+                    Carregar Fotos
+                  </p>
+                </div>
               </CldUploadButton>
             </div>
 

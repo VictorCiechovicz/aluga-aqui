@@ -1,12 +1,17 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { useSession } from 'next-auth/react'
+import { useSession, signOut } from 'next-auth/react'
 import { Icons } from '../ui/icons'
+
+interface ColumnProps {
+  fild: string
+  path: string
+}
 
 const columnAuth = [
   {
-    fild: 'Minha Conta',
+    fild: 'Minha Casas',
     path: '/profile'
   },
   {
@@ -20,8 +25,12 @@ const columnAuth = [
   {
     fild: ' Anunciar',
     path: '/announce'
+  },
+  {
+    fild: ' Sair',
+    path: '/announce'
   }
-]
+] as ColumnProps[]
 
 const columnNoAuth = [
   {
@@ -32,7 +41,7 @@ const columnNoAuth = [
     fild: 'Buscar',
     path: '/'
   }
-]
+] as ColumnProps[]
 
 export function SideBar() {
   const [isAuth, setIsAuth] = useState(false)
@@ -40,6 +49,14 @@ export function SideBar() {
   const session = useSession()
 
   const columns = isAuth ? columnAuth : columnNoAuth
+
+  const handleColumnClick = (column: ColumnProps) => {
+    if (column.fild === ' Sair') {
+      signOut()
+    } else {
+      router.push(column.path)
+    }
+  }
 
   useEffect(() => {
     if (session?.status === 'authenticated') {
@@ -63,7 +80,7 @@ export function SideBar() {
         {columns.map(column => (
           <li
             key={column.path}
-            onClick={() => router.push(column.path)}
+            onClick={() => handleColumnClick(column)}
             className="hover:text-white rounded-lg cursor-pointer"
           >
             {column.fild}

@@ -1,7 +1,5 @@
 'use client'
 import { House } from '@prisma/client'
-import Image from 'next/image'
-import ImageCasa from '../../../../../public/images/casa.jpg'
 import { Icons } from '@/components/ui/icons'
 import ImageCarousel from './ImageCarrousel'
 
@@ -9,22 +7,15 @@ interface CardHouseProps {
   house: House
 }
 
-
-const imageUrls = [
-  "https://s01.jetimgs.com/trtuAxMvbtluIHQ1JHO1-v9MhK-Bz4LEOpKrJg45x6-JBfkWzVCqyNYYxy2NtVIz3ghxa-ii4A3k96GSot4FHeE2-YnxFR8wpBQOevkStcy58uiqtVkBFlCA3zpLdBS7tq5hhi3pxbiLqvYLR4x9zX-OTpqMOhmjOxwhki3h2g/horgitljkope.jpg",
-  "https://s01.jetimgs.com/trtuA48vbsly56ThRbJxoe5hA-OXrZjL4ISF8D9N_JajFKDHKQLWF4kmDO316grzPQAjB-ryyV5h2pjTYXQIHeEu-YnxxZHPAbSPR-Ji3yL0fljcT9SKM9cl2yzIrfP8gKmn0M1infG-JavDpzWvfTRg3yp5nz00n1SYp1uP/retyudtsra.jpg",
-  "https://via.placeholder.com/640x480?text=Image3",
-  "https://via.placeholder.com/640x480?text=Image4",
-  "https://via.placeholder.com/640x480?text=Image5"
-];
-
 export default function CardHouse({ house }: CardHouseProps) {
   return (
     <div
       key={house.id}
       className="border p-4 gap-4 bg-white rounded-lg flex justify-start"
     >
-     <ImageCarousel images={imageUrls} />
+      <div className="w-64 rounded-lg">
+        <ImageCarousel images={house.images} />
+      </div>
       <div className="flex flex-col justify-between">
         <div>
           <p className="text-3xl font-semibold capitalize">{house.name}</p>

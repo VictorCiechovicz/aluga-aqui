@@ -21,11 +21,7 @@ const ImageCarousel = ({ images }: ImageCarouselProps) => {
 
   return (
     <div className="relative">
-      <img
-        src={images[currentIndex]}
-        alt="Carousel"
-        className="w-64 rounded-lg"
-      />
+      <img src={images[currentIndex]} alt="Carousel" className=" rounded-lg" />
       <button
         onClick={prevImage}
         className="absolute top-1/2 left-2 transform -translate-y-1/2 text-white font-bold"
