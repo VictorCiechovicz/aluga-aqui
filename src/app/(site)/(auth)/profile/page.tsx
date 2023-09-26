@@ -5,14 +5,12 @@ import axios from 'axios'
 export default async function Profile() {
   const currentUser = await getCurrentUser()
 
-  const userId =currentUser?.id
-  const houses = await axios.get(
-    `http://localhost:3000/api/house/${userId}`
-  )
-  console.log(houses.data)
+  const userId = currentUser?.id
+  const houses = await axios.get(`http://localhost:3000/api/house/user/${userId}`)
+
   return (
     <div>
- <ProfileList houses={houses.data} /> 
+      <ProfileList houses={houses.data} />
     </div>
   )
 }

@@ -46,9 +46,9 @@ model House {
   adress          String
   coords          String
   images          String[]
-  description     String?
-  numberBedrooms  String?
-  numberBathrooms String?
+  description     String
+  numberBedrooms  String
+  numberBathrooms String
   createdAt       DateTime @default(now())
   updateAt        DateTime @default(now())
   userId          String   @db.ObjectId

@@ -21,6 +21,7 @@ import { useRouter } from 'next/navigation'
 import { ToastAction } from '@/components/ui/toast'
 import { Textarea } from '@/components/ui/textarea'
 import { CldUploadButton } from 'next-cloudinary'
+import { House } from '@prisma/client'
 
 const accountFormSchema = z.object({
   title: z
@@ -40,26 +41,33 @@ const accountFormSchema = z.object({
 
   numberBathrooms: z.string({
     required_error: 'Informe Quantidade de Banheiros.'
-  }),
-
-
+  })
 })
 
 type FormValues = z.infer<typeof accountFormSchema>
 
-// This can come from your database or API.
-const defaultValues: Partial<FormValues> = {
-  // name: "Your name",
-  // dob: new Date("2023-01-23"),
+interface AnnounceFormProps {
+  house?: House
 }
 
-export function AnnounceForm() {
-  const [imagesUrl, setImagesUrl] = useState<string[]>([])
+export function AnnounceForm({ house }: AnnounceFormProps) {
+  const [imagesUrl, setImagesUrl] = useState<string[]>(
+    house ? house.images : []
+  )
+console.log(house)
 
   const form = useForm<FormValues>({
     resolver: zodResolver(accountFormSchema),
-    defaultValues
-  })
+    defaultValues: {
+      title: house?.name || "",
+      location: house?.adress || "",
+      price: house?.price || "",
+      description: house?.description || "",
+      numberBedrooms: house?.numberBedrooms || "",
+      numberBathrooms: house?.numberBathrooms || "",
+    },
+  });
+
   const { toast } = useToast()
   const router = useRouter()
 
@@ -91,10 +99,50 @@ export function AnnounceForm() {
       setImagesUrl(prevUrls => [...prevUrls, url])
     }
   }
-  const onSubmit = async (data: FormValues) => {
-  
-    const coords = await getCoordinatesFromAddress(data.location)
 
+  const handleUpdateHouse = async (data: House) => {
+    const coords = await getCoordinatesFromAddress(data.adress)
+
+    if (coords) {
+      const infos = {
+        name: data.name,
+        price: data.price,
+        adress: coords.address,
+        coords: String(coords.location),
+        images: imagesUrl,
+        description: data.description,
+        numberBedrooms: data.numberBedrooms,
+        numberBathrooms: data.numberBathrooms
+      }
+      axios
+        .put(`/api/house/${data.id}`, infos)
+        .then(() => {
+          toast({
+            title: 'Casa Modifcada',
+            description: 'Anuncio atualizado com sucesso!',
+            variant: 'default'
+          })
+        })
+        .catch(() =>
+          toast({
+            title: 'Casa Deletada',
+            description: 'Não foi possível atualizar o anuncio!',
+            variant: 'destructive',
+            action: (
+              <ToastAction altText="Tente Novamente">
+                Tente Novamente
+              </ToastAction>
+            )
+          })
+        )
+        .finally(() => {
+          router.push('/profile'), router.refresh()
+        })
+    }
+  }
+  const onSubmit = async (data: FormValues) => {
+    const coords = await getCoordinatesFromAddress(data.location);
+  
     if (coords) {
       const infos = {
         name: data.title,
@@ -106,35 +154,43 @@ export function AnnounceForm() {
         numberBedrooms: data.numberBedrooms,
         numberBathrooms: data.numberBathrooms
       }
+  
 
-      axios
-        .post('/api/house', infos)
-        .then(() => {
-          toast({
-            title: 'Ebaaaa...',
-            description: 'Casa Anunciada com sucesso!',
-            variant: 'default'
+      if (house && house.id) {
+        handleUpdateHouse({...infos, id: house.id});
+      } else {
+        axios
+          .post('/api/house', infos)
+          .then(() => {
+            toast({
+              title: 'Ebaaaa...',
+              description: 'Casa anunciada com sucesso!',
+              variant: 'default'
+            });
           })
-        })
-        .catch(() =>
-          toast({
-            title: 'Oops...',
-            description: 'Não foi possível realizar o anuncio',
-            variant: 'destructive',
-            action: (
-              <ToastAction altText="Tente Novamente">
-                Tente Novamente
-              </ToastAction>
-            )
-          })
-        )
-        .finally(() => {
-          router.push('/'), router.refresh()
-        })
+          .catch(() =>
+            toast({
+              title: 'Oops...',
+              description: 'Não foi possível realizar o anuncio',
+              variant: 'destructive',
+              action: (
+                <ToastAction altText="Tente Novamente">
+                  Tente Novamente
+                </ToastAction>
+              )
+            })
+          )
+          .finally(() => {
+            router.push('/'), router.refresh();
+          });
+      }
     } else {
-      console.error('Error getting coordinates from address.')
+      console.error('Error getting coordinates from address.');
     }
-  }
+  };
+  
+
+ 
   return (
     <div className="p-4 bg-gray-100 flex justify-center">
       <div className="bg-white p-4 w-[956px] rounded-lg">

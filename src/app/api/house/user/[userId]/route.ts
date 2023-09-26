@@ -2,12 +2,9 @@
 import { NextResponse } from 'next/server'
 import prisma from '@/lib/prismadb'
 
-
-
 interface IParams {
   userId?: string
 }
-
 
 export async function GET(request: Request, { params }: { params: IParams }) {
 

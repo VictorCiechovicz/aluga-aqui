@@ -2,8 +2,11 @@
 import { House } from '@prisma/client'
 import { Icons } from '@/components/ui/icons'
 import ImageCarousel from './ImageCarrousel'
-import Link from 'next/link'
 import clsx from 'clsx'
+import axios from 'axios'
+import { useToast } from '@/components/ui/use-toast'
+import { useRouter } from 'next/navigation'
+import { ToastAction } from '@/components/ui/toast'
 
 interface CardHouseProps {
   house: House
@@ -11,9 +14,41 @@ interface CardHouseProps {
 }
 
 export default function CardHouse({ house, isProfile }: CardHouseProps) {
+  const { toast } = useToast()
+  const router = useRouter()
+
   function truncateText(text: any, maxLength: any) {
     if (text.length <= maxLength) return text
     return text.slice(0, maxLength) + '...'
+  }
+
+  function handleEditHouse(houseId: string) {
+    router.push(`/announce/edit/${houseId}`)
+  }
+
+  const handleDeleteHouse = async (houseId: string) => {
+    axios
+      .delete(`/api/house/${houseId}`)
+      .then(() => {
+        toast({
+          title: 'Casa Deletada',
+          description: 'Anuncio deletado com sucesso!',
+          variant: 'default'
+        })
+      })
+      .catch(() =>
+        toast({
+          title: 'Casa Deletada',
+          description: 'Não foi possível deletar o anuncio!',
+          variant: 'destructive',
+          action: (
+            <ToastAction altText="Tente Novamente">Tente Novamente</ToastAction>
+          )
+        })
+      )
+      .finally(() => {
+        router.refresh()
+      })
   }
 
   return (
@@ -65,11 +100,17 @@ export default function CardHouse({ house, isProfile }: CardHouseProps) {
       {isProfile && (
         <div>
           <div className="flex  gap-4">
-            <div className="cursor-pointer hover:text-gray-400">
+            <div
+              className="cursor-pointer hover:text-gray-400"
+              onClick={() => handleEditHouse(house.id)}
+            >
               <Icons.pencil />
             </div>
 
-            <div className="cursor-pointer hover:text-gray-400">
+            <div
+              className="cursor-pointer hover:text-gray-400"
+              onClick={() => handleDeleteHouse(house.id)}
+            >
               <Icons.trash />
             </div>
           </div>
