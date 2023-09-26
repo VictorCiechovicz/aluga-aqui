@@ -1,9 +1,18 @@
-"use client"
+import getCurrentUser from '@/actions/getCurrentUser'
+import { ProfileList } from '@/components/page/profile/ProfileList'
+import axios from 'axios'
 
-import { useSession } from "next-auth/react"
+export default async function Profile() {
+  const currentUser = await getCurrentUser()
 
-export default function Profile() {
-
-
-  return <>Profile</>
+  const userId =currentUser?.id
+  const houses = await axios.get(
+    `http://localhost:3000/api/house/${userId}`
+  )
+  console.log(houses.data)
+  return (
+    <div>
+ <ProfileList houses={houses.data} /> 
+    </div>
+  )
 }

@@ -2,18 +2,29 @@
 import { House } from '@prisma/client'
 import { Icons } from '@/components/ui/icons'
 import ImageCarousel from './ImageCarrousel'
+import Link from 'next/link'
+import clsx from 'clsx'
 
 interface CardHouseProps {
   house: House
+  isProfile?: boolean
 }
 
-export default function CardHouse({ house }: CardHouseProps) {
+export default function CardHouse({ house, isProfile }: CardHouseProps) {
+  function truncateText(text: any, maxLength: any) {
+    if (text.length <= maxLength) return text
+    return text.slice(0, maxLength) + '...'
+  }
+
   return (
     <div
       key={house.id}
-      className="border p-4 gap-4 bg-white rounded-lg flex justify-start"
+      className={clsx(
+        'border p-4 gap-4 bg-white rounded-lg flex ',
+        isProfile ? 'justify-between' : 'justify-start'
+      )}
     >
-      <div className="w-64 rounded-lg">
+      <div className="w-64  rounded-lg">
         <ImageCarousel images={house.images} />
       </div>
       <div className="flex flex-col justify-between">
@@ -51,6 +62,19 @@ export default function CardHouse({ house }: CardHouseProps) {
           </div>
         </div>
       </div>
+      {isProfile && (
+        <div>
+          <div className="flex  gap-4">
+            <div className="cursor-pointer hover:text-gray-400">
+              <Icons.pencil />
+            </div>
+
+            <div className="cursor-pointer hover:text-gray-400">
+              <Icons.trash />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
