@@ -7,23 +7,29 @@ import axios from 'axios'
 import { useToast } from '@/components/ui/use-toast'
 import { useRouter } from 'next/navigation'
 import { ToastAction } from '@/components/ui/toast'
+import { useEffect, useState } from 'react'
 
 interface CardHouseProps {
   house: House
   isProfile?: boolean
+  isFavorite?: boolean
 }
 
-export default function CardHouse({ house, isProfile }: CardHouseProps) {
+export default function CardHouse({
+  house,
+  isProfile,
+  isFavorite
+}: CardHouseProps) {
+  const [isFavorited, setIsFavorited] = useState(false)
   const { toast } = useToast()
   const router = useRouter()
-
-  function truncateText(text: any, maxLength: any) {
-    if (text.length <= maxLength) return text
-    return text.slice(0, maxLength) + '...'
+console.log(isFavorited)
+  const handleDetailsHouse = (houseId: string) => {
+    router.push(`/announce/${houseId}/details`)
   }
 
   function handleEditHouse(houseId: string) {
-    router.push(`/announce/edit/${houseId}`)
+    router.push(`/announce/${houseId}/edit`)
   }
 
   const handleDeleteHouse = async (houseId: string) => {
@@ -40,10 +46,7 @@ export default function CardHouse({ house, isProfile }: CardHouseProps) {
         toast({
           title: 'Casa Deletada',
           description: 'Não foi possível deletar o anuncio!',
-          variant: 'destructive',
-          action: (
-            <ToastAction altText="Tente Novamente">Tente Novamente</ToastAction>
-          )
+          variant: 'destructive'
         })
       )
       .finally(() => {
@@ -51,18 +54,59 @@ export default function CardHouse({ house, isProfile }: CardHouseProps) {
       })
   }
 
+  const handleFavoriteHouse = () => {
+    if (typeof window === 'undefined' || !window.localStorage) {
+          console.warn('localStorage is not available')
+      return
+    }
+
+    const favoritedHouses = JSON.parse(
+      localStorage.getItem('favoritedHouses') || '[]'
+    )
+
+    if (favoritedHouses.includes(house.id)) {
+      const updatedFavoritedHouses = favoritedHouses.filter(
+        (id: any) => id !== house.id
+      )
+      localStorage.setItem(
+        'favoritedHouses',
+        JSON.stringify(updatedFavoritedHouses)
+      )
+    } else {
+      favoritedHouses.push(house.id)
+      localStorage.setItem('favoritedHouses', JSON.stringify(favoritedHouses))
+    }
+
+    setIsFavorited(prev => !prev)
+  }
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.localStorage) {
+      console.warn('localStorage is not available')
+      return
+    }
+
+    const favoritedHouses = JSON.parse(
+      localStorage.getItem('favoritedHouses') || '[]'
+    )
+    setIsFavorited(favoritedHouses.includes(house.id))
+  }, [house.id])
+
   return (
     <div
       key={house.id}
       className={clsx(
-        'border p-4 gap-4 bg-white rounded-lg flex ',
-        isProfile ? 'justify-between' : 'justify-start'
+        'border p-4 gap-4 bg-white rounded-lg flex  ',
+        isProfile || isFavorite ? 'justify-between' : 'justify-start'
       )}
     >
       <div className="w-64  rounded-lg">
         <ImageCarousel images={house.images} />
       </div>
-      <div className="flex flex-col justify-between">
+      <div
+        className="flex flex-col justify-between cursor-pointer"
+        onClick={() => handleDetailsHouse(house.id)}
+      >
         <div>
           <p className="text-3xl font-semibold capitalize">{house.name}</p>
           <p className="text-sm text-gray-500 font-normal">{house.adress}</p>
@@ -97,6 +141,22 @@ export default function CardHouse({ house, isProfile }: CardHouseProps) {
           </div>
         </div>
       </div>
+
+      {isFavorite && (
+        <div>
+          <div className="flex gap-4">
+            <div
+              className="cursor-pointer hover:text-gray-400"
+              onClick={() => handleFavoriteHouse()}
+            >
+              <Icons.bookFavorite
+                className={isFavorited ? 'stroke-red-600' : 'stroke-gray-400'}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
       {isProfile && (
         <div>
           <div className="flex  gap-4">

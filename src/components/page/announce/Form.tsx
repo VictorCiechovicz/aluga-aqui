@@ -22,6 +22,8 @@ import { ToastAction } from '@/components/ui/toast'
 import { Textarea } from '@/components/ui/textarea'
 import { CldUploadButton } from 'next-cloudinary'
 import { House } from '@prisma/client'
+import Image from 'next/image'
+import { Icons } from '@/components/ui/icons'
 
 const accountFormSchema = z.object({
   title: z
@@ -54,19 +56,18 @@ export function AnnounceForm({ house }: AnnounceFormProps) {
   const [imagesUrl, setImagesUrl] = useState<string[]>(
     house ? house.images : []
   )
-console.log(house)
 
   const form = useForm<FormValues>({
     resolver: zodResolver(accountFormSchema),
     defaultValues: {
-      title: house?.name || "",
-      location: house?.adress || "",
-      price: house?.price || "",
-      description: house?.description || "",
-      numberBedrooms: house?.numberBedrooms || "",
-      numberBathrooms: house?.numberBathrooms || "",
-    },
-  });
+      title: house?.name || '',
+      location: house?.adress || '',
+      price: house?.price || '',
+      description: house?.description || '',
+      numberBedrooms: house?.numberBedrooms || '',
+      numberBathrooms: house?.numberBathrooms || ''
+    }
+  })
 
   const { toast } = useToast()
   const router = useRouter()
@@ -98,6 +99,9 @@ console.log(house)
     if (url) {
       setImagesUrl(prevUrls => [...prevUrls, url])
     }
+  }
+  const handleRemoveImage = (result: any) => {
+    setImagesUrl(prevUrls => prevUrls.filter(url => url !== result))
   }
 
   const handleUpdateHouse = async (data: House) => {
@@ -141,56 +145,62 @@ console.log(house)
     }
   }
   const onSubmit = async (data: FormValues) => {
-    const coords = await getCoordinatesFromAddress(data.location);
-  
-    if (coords) {
-      const infos = {
-        name: data.title,
-        price: data.price,
-        adress: coords.address,
-        coords: String(coords.location),
-        images: imagesUrl,
-        description: data.description,
-        numberBedrooms: data.numberBedrooms,
-        numberBathrooms: data.numberBathrooms
-      }
-  
+    if (imagesUrl.length < 10) {
+      const coords = await getCoordinatesFromAddress(data.location)
 
-      if (house && house.id) {
-        handleUpdateHouse({...infos, id: house.id});
-      } else {
-        axios
-          .post('/api/house', infos)
-          .then(() => {
-            toast({
-              title: 'Ebaaaa...',
-              description: 'Casa anunciada com sucesso!',
-              variant: 'default'
-            });
+      if (coords) {
+        const infos = {
+          name: data.title,
+          price: data.price,
+          adress: coords.address,
+          coords: String(coords.location),
+          images: imagesUrl,
+          description: data.description,
+          numberBedrooms: data.numberBedrooms,
+          numberBathrooms: data.numberBathrooms
+        }
+
+        if (house && house.id) {
+          handleUpdateHouse({
+            ...infos,
+            id: house.id,
+            createdAt: house.createdAt,
+            updateAt: new Date(),
+            userId: house.userId
           })
-          .catch(() =>
-            toast({
-              title: 'Oops...',
-              description: 'Não foi possível realizar o anuncio',
-              variant: 'destructive',
-              action: (
-                <ToastAction altText="Tente Novamente">
-                  Tente Novamente
-                </ToastAction>
-              )
+        } else {
+          axios
+            .post('/api/house', infos)
+            .then(() => {
+              toast({
+                title: 'Ebaaaa...',
+                description: 'Casa anunciada com sucesso!',
+                variant: 'default'
+              })
             })
-          )
-          .finally(() => {
-            router.push('/'), router.refresh();
-          });
+            .catch(() =>
+              toast({
+                title: 'Oops...',
+                description: 'Não foi possível realizar o anuncio',
+                variant: 'destructive'
+              })
+            )
+            .finally(() => {
+              router.push('/'), router.refresh()
+            })
+        }
+      } else {
+        console.error('Error getting coordinates from address.')
       }
     } else {
-      console.error('Error getting coordinates from address.');
+      toast({
+        title: 'Oops...',
+        description: 'Numero máximo de 10 Imagens',
+        variant: 'destructive'
+      })
     }
-  };
-  
+  }
 
- 
   return (
     <div className="p-4 bg-gray-100 flex justify-center">
       <div className="bg-white p-4 w-[956px] rounded-lg">
@@ -322,18 +332,41 @@ console.log(house)
               <div className="border bg-gray-100 p-1">
                 <p className="font-semibold text-lg">Fotos</p>
               </div>
+              <div className="flex gap-4 overflow-x-auto p-2">
+                {imagesUrl.map(image => (
+                  <div key={image} className="relative inline-block">
+                    <Image
+                      src={image}
+                      alt="Image House"
+                      width={500}
+                      height={40}
+                    />
 
-              <CldUploadButton
-                onUpload={handleUpload}
-                uploadPreset="fimxfjhg"
-                className="p-2"
-              >
-                <div className="bg-blue-900  p-2 rounded-md ">
-                  <p className="text-white font-medium text-md">
-                    Carregar Fotos
-                  </p>
-                </div>
-              </CldUploadButton>
+                    <button
+                      className=" flex items-center justify-center absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6"
+                      onClick={() => handleRemoveImage(image)}
+                    >
+                      <Icons.xCicle />
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              {imagesUrl.length < 10 ? (
+                <CldUploadButton
+                  onUpload={handleUpload}
+                  uploadPreset="fimxfjhg"
+                  className="p-2"
+                >
+                  <div className="bg-blue-900  p-2 rounded-md ">
+                    <p className="text-white font-medium text-md">
+                      Carregar Fotos
+                    </p>
+                  </div>
+                </CldUploadButton>
+              ) : (
+                <div className="p-2">Número máximo de images</div>
+              )}
             </div>
 
             <div className="w-full flex justify-end gap-2">

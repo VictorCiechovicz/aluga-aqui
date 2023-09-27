@@ -1,30 +1,33 @@
-'use client'
-
-import { useState } from 'react'
+import { useState } from 'react';
 
 interface ImageCarouselProps {
-  images: string[]
+  images: string[];
+  width?: string;
+  height?: string;
 }
 
-const ImageCarousel = ({ images }: ImageCarouselProps) => {
-  const [currentIndex, setCurrentIndex] = useState(0)
+const ImageCarousel = ({ images, width = 'w-64', height = 'h-42' }: ImageCarouselProps) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const prevImage = () => {
-    setCurrentIndex(
-      prevIndex => (prevIndex - 1 + images.length) % images.length
-    )
-  }
+    setCurrentIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
+  };
 
   const nextImage = () => {
-    setCurrentIndex(prevIndex => (prevIndex + 1) % images.length)
-  }
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+  };
+
+  const handleImageClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+  };
 
   return (
-    <div className="relative">
+    <div className="relative shadow-sm">
       <img
         src={images[currentIndex]}
         alt="Carousel"
-        className=" rounded-lg object-cover cursor-pointer hover:scale-110 transition translate w-64 h-42"
+        className={`rounded-lg object-cover cursor-pointer hover:scale-110 transition translate ${width} ${height}`}
+        onClick={handleImageClick} 
       />
       <button
         onClick={prevImage}
@@ -39,7 +42,7 @@ const ImageCarousel = ({ images }: ImageCarouselProps) => {
         ❯
       </button>
     </div>
-  )
-}
+  );
+};
 
-export default ImageCarousel
+export default ImageCarousel;

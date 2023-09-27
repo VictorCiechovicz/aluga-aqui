@@ -5,12 +5,12 @@ import Image from 'next/image'
 import ImageCasa from '../../../../public/images/casa.jpg'
 import { House } from '@prisma/client'
 import CardHouse from './components/CardHouse'
+import { Modal } from '@/components/Modal'
+import { useState } from 'react'
 
 export interface SearchListProps {
   houses: House[]
 }
-
-
 
 export function SearchList({ houses }: SearchListProps) {
   return (
@@ -22,7 +22,7 @@ export function SearchList({ houses }: SearchListProps) {
 
         <div className="flex flex-col gap-4 p-4  max-h-[730px] overflow-y-auto bg-gray-100">
           {houses.map(house => (
-            <CardHouse house={house} />
+            <CardHouse house={house} isFavorite/>
           ))}
         </div>
       </div>
