@@ -7,12 +7,13 @@ import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 
 import { House } from '@prisma/client'
+import Image from 'next/image'
 
 const customIcon = new L.Icon({
-  iconUrl: '/images/point.png', 
-  iconSize: [68, 68], 
-  iconAnchor: [22, 94], 
-  popupAnchor: [-3, -76] 
+  iconUrl: '/images/point.png',
+  iconSize: [68, 68],
+  iconAnchor: [22, 94],
+  popupAnchor: [-3, -76]
 })
 
 interface MapProps {
@@ -21,11 +22,10 @@ interface MapProps {
 
 export function Map({ houses }: MapProps) {
   function computeAverageCoords(houses: House[]): [number, number] {
-    if (houses.length === 0) return [0, 0] 
+    if (houses.length === 0) return [0, 0]
 
     const total = houses.reduce(
       (acc, house) => {
-  
         if (!house.coords || house.coords.split(',').length !== 2) {
           return acc
         }
@@ -42,7 +42,7 @@ export function Map({ houses }: MapProps) {
 
         acc.lat += lat
         acc.lng += lng
-        return acc 
+        return acc
       },
       { lat: 0, lng: 0 } as { lat: number; lng: number }
     )
@@ -73,7 +73,24 @@ export function Map({ houses }: MapProps) {
             icon={customIcon}
           >
             <Popup>
-              {house.name} <br /> {house.price}
+              <div>
+                <div className="flex gap-4 items-center">
+                  <Image
+                    src={house.images[0]}
+                    alt="image house"
+                    width={120}
+                    height={10}
+                    className="rounded-2xl  h-28"
+                  />
+                  <div>
+                    <p className="capitalize text-sm font-bold">{house.name}</p>
+                    
+                    <p className=" text-xs text-gray-500 font-normal">
+                      {house.adress}
+                    </p>
+                  </div>
+                </div>
+              </div>
             </Popup>
           </Marker>
         ))}

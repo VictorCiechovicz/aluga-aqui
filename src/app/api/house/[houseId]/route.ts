@@ -14,10 +14,12 @@ export async function GET(request: Request, { params }: { params: IParams }) {
     const house = await prisma.house.findFirst({
       where: {
         id: houseId
+      },
+      include: {
+        user: true
       }
     });
 
-    // If no house was found, you can return a 404 not found response
     if (!house) {
       return new NextResponse('Not Found', { status: 404 });
     }
@@ -36,13 +38,13 @@ export async function PUT(request: Request, { params }: { params: IParams }) {
   try {
     const { houseId } = params;
 
-    const updateData = await request.json(); 
+    const updateData = await request.json();
 
     const updatedHouse = await prisma.house.update({
       where: {
         id: houseId,
       },
-      data: updateData, 
+      data: updateData,
     });
 
     return NextResponse.json(updatedHouse);
@@ -67,7 +69,7 @@ export async function DELETE(request: Request, { params }: { params: IParams }) 
 
     const houses = await prisma.house.delete({
       where: {
-        id:houseId
+        id: houseId
       }
     })
 

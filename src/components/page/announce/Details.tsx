@@ -1,27 +1,22 @@
 'use client'
 
-import { useToast } from '@/components/ui/use-toast'
-
-import { useRouter } from 'next/navigation'
-
 import { House } from '@prisma/client'
 import ImageCarousel from '../searchHouse/components/ImageCarrousel'
 import { Icons } from '@/components/ui/icons'
 import { formatDistanceToNow } from 'date-fns'
 import { pt } from 'date-fns/locale'
+import Image from 'next/image'
+import UserImage from '../../../../public/images/user.png'
 
 interface AnnounceDetailsProps {
   house?: House
 }
 
 export function AnnounceDetails({ house }: AnnounceDetailsProps) {
-  const { toast } = useToast()
-  const router = useRouter()
-
   function pluralize(count: number, singular: string, plural: string) {
     return count === 1 ? singular : plural
   }
-
+  const phone = '55991528230'
   const bedroomText = pluralize(
     Number(house?.numberBedrooms),
     'Dormitório',
@@ -32,6 +27,13 @@ export function AnnounceDetails({ house }: AnnounceDetailsProps) {
     'Banheiro',
     'Banheiros'
   )
+
+  function handleOpenWhatsapp() {
+    window.open(
+      `https://api.whatsapp.com/send?phone=${phone.replace('+', '')}`,
+      '_blank'
+    )
+  }
 
   return (
     <div className="p-4 bg-gray-100 flex justify-center">
@@ -100,11 +102,48 @@ export function AnnounceDetails({ house }: AnnounceDetailsProps) {
                 </p>
               </div>
             </div>
+            <div>
+              <div className="p-4">
+                <div className=" w-56 h-24 rounded-2xl border border-gray-900 p-2 shadow-md">
+                  <p className="text-sm font-semibold">PREÇO</p>
+                  <p className="text-2xl text-blue-500 font-semibold pt-1">
+                    R$ {house?.price}/Mês
+                  </p>
+                </div>
+              </div>
+              <div className="p-4">
+                <div className=" w-56  rounded-2xl border border-gray-900 p-2 shadow-md">
+                  <p className="text-sm font-semibold">ANUNCIANTE</p>
+                  <div className='flex items-center pt-2 gap-2'>
+                    <Image
+                      src={UserImage}
+                      alt="image user"
+                      width={35}
+                      height={35}
+                    />
+                    <p className="text-sm text-gray-500 font-normal">
+                      Conecta Imóvel
+                    </p>
+                  </div>
 
-            <div className="p-4">
-              <div className="bg-gray-100 w-56 h-24 rounded-2xl border border-gray-900 p-2 shadow-md">
-                <p className="text-xl font-semibold">Preço</p>
-                <p className="text-2xl font-semibold">R$ {house?.price}/Mês</p>
+                  <div className="flex items-end justify-between gap-4  pt-6 px-1">
+                    <div>
+                      <p className="text-sm text-gray-500 font-normal">
+                        Telefone de contato
+                      </p>
+                      <p className="text-sm text-gray-500 font-normal">
+                        55 991528230
+                      </p>
+                    </div>
+
+                    <div
+                      className="hover:text-gray-400 cursor-pointer"
+                      onClick={handleOpenWhatsapp}
+                    >
+                      <Icons.whatsapp />
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
