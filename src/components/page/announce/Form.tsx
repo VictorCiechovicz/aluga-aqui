@@ -43,6 +43,9 @@ const accountFormSchema = z.object({
 
   numberBathrooms: z.string({
     required_error: 'Informe Quantidade de Banheiros.'
+  }),
+  number: z.string({
+    required_error: 'Informe o número de Celular.'
   })
 })
 
@@ -155,6 +158,7 @@ export function AnnounceForm({ house }: AnnounceFormProps) {
           adress: coords.address,
           coords: String(coords.location),
           images: imagesUrl,
+          number:data.number,
           description: data.description,
           numberBedrooms: data.numberBedrooms,
           numberBathrooms: data.numberBathrooms
@@ -301,6 +305,25 @@ export function AnnounceForm({ house }: AnnounceFormProps) {
                     <FormDescription>
                       Informe a quantidade de comodos do imóvel.
                     </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="border rounded-lg">
+              <div className="border bg-gray-100 p-1">
+                <p className="font-semibold text-lg">Contato</p>
+              </div>
+              <FormField
+                control={form.control}
+                name="number"
+                render={({ field }) => (
+                  <FormItem className="p-2">
+                    <FormLabel>Celular</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Celular" {...field} />
+                    </FormControl>
+                    <FormDescription>Informe seu WhatsApp.</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}

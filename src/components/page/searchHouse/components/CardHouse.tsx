@@ -6,7 +6,7 @@ import clsx from 'clsx'
 import axios from 'axios'
 import { useToast } from '@/components/ui/use-toast'
 import { useRouter } from 'next/navigation'
-import { ToastAction } from '@/components/ui/toast'
+import { Tooltip as ReactTooltip, Tooltip } from 'react-tooltip'
 import { useEffect, useState } from 'react'
 
 interface CardHouseProps {
@@ -23,7 +23,7 @@ export default function CardHouse({
   const [isFavorited, setIsFavorited] = useState(false)
   const { toast } = useToast()
   const router = useRouter()
-console.log(isFavorited)
+  console.log(isFavorited)
   const handleDetailsHouse = (houseId: string) => {
     router.push(`/announce/${houseId}/details`)
   }
@@ -56,7 +56,7 @@ console.log(isFavorited)
 
   const handleFavoriteHouse = () => {
     if (typeof window === 'undefined' || !window.localStorage) {
-          console.warn('localStorage is not available')
+      console.warn('localStorage is not available')
       return
     }
 
@@ -148,7 +148,11 @@ console.log(isFavorited)
             <div
               className="cursor-pointer hover:text-gray-400"
               onClick={() => handleFavoriteHouse()}
+              data-tooltip-id="tooltip-favorite"
+              data-tooltip-content="Adicionar aos favoritos"
+              data-tooltip-place="left-start"
             >
+              <Tooltip id="tooltip-favorite" />
               <Icons.bookFavorite
                 className={isFavorited ? 'stroke-red-600' : 'stroke-gray-400'}
               />
@@ -163,15 +167,23 @@ console.log(isFavorited)
             <div
               className="cursor-pointer hover:text-gray-400"
               onClick={() => handleEditHouse(house.id)}
+              data-tooltip-id="tooltip-edit"
+              data-tooltip-content="Editar Anúncio"
+              data-tooltip-place="top"
             >
               <Icons.pencil />
+              <Tooltip id="tooltip-edit" />
             </div>
 
             <div
               className="cursor-pointer hover:text-gray-400"
               onClick={() => handleDeleteHouse(house.id)}
+              data-tooltip-id="tooltip-edit"
+              data-tooltip-content="Excluir Anúncio"
+              data-tooltip-place="top"
             >
               <Icons.trash />
+              <Tooltip id="tooltip-delete" />
             </div>
           </div>
         </div>

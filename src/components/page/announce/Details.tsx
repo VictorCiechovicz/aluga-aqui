@@ -1,6 +1,6 @@
 'use client'
 
-import { House } from '@prisma/client'
+import { House, User } from '@prisma/client'
 import ImageCarousel from '../searchHouse/components/ImageCarrousel'
 import { Icons } from '@/components/ui/icons'
 import { formatDistanceToNow } from 'date-fns'
@@ -10,13 +10,14 @@ import UserImage from '../../../../public/images/user.png'
 
 interface AnnounceDetailsProps {
   house?: House
+  user?: User
 }
 
-export function AnnounceDetails({ house }: AnnounceDetailsProps) {
+export function AnnounceDetails({ house, user }: AnnounceDetailsProps) {
   function pluralize(count: number, singular: string, plural: string) {
     return count === 1 ? singular : plural
   }
-  const phone = '55991528230'
+
   const bedroomText = pluralize(
     Number(house?.numberBedrooms),
     'Dormitório',
@@ -30,7 +31,7 @@ export function AnnounceDetails({ house }: AnnounceDetailsProps) {
 
   function handleOpenWhatsapp() {
     window.open(
-      `https://api.whatsapp.com/send?phone=${phone.replace('+', '')}`,
+      `https://api.whatsapp.com/send?phone=${house?.number?.replace('+', '')}`,
       '_blank'
     )
   }
@@ -114,15 +115,15 @@ export function AnnounceDetails({ house }: AnnounceDetailsProps) {
               <div className="p-4">
                 <div className=" w-56  rounded-2xl border border-gray-900 p-2 shadow-md">
                   <p className="text-sm font-semibold">ANUNCIANTE</p>
-                  <div className='flex items-center pt-2 gap-2'>
+                  <div className="flex items-center pt-2 gap-2">
                     <Image
-                      src={UserImage}
+                      src={user?.image ? user?.image : UserImage}
                       alt="image user"
                       width={35}
                       height={35}
                     />
-                    <p className="text-sm text-gray-500 font-normal">
-                      Conecta Imóvel
+                    <p className="text-sm text-gray-500 font-normal capitalize">
+                      {user?.name}
                     </p>
                   </div>
 
@@ -132,7 +133,7 @@ export function AnnounceDetails({ house }: AnnounceDetailsProps) {
                         Telefone de contato
                       </p>
                       <p className="text-sm text-gray-500 font-normal">
-                        55 991528230
+                        {house?.number}
                       </p>
                     </div>
 

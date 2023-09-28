@@ -1,33 +1,49 @@
 'use client'
 
 import { Map } from './Map'
-import Image from 'next/image'
-import ImageCasa from '../../../../public/images/casa.jpg'
+
 import { House } from '@prisma/client'
 import CardHouse from './components/CardHouse'
-import { Modal } from '@/components/Modal'
 import { useState } from 'react'
+import { Input } from '@/components/ui/input'
 
 export interface SearchListProps {
   houses: House[]
 }
 
 export function SearchList({ houses }: SearchListProps) {
+  const [locationFilter, setLocationFilter] = useState('')
+
+  const filteredHouses = houses.filter(house =>
+    house.adress.toLowerCase().includes(locationFilter.toLowerCase())
+  )
   return (
     <div className="flex justify-between">
-      <div className="flex flex-col w-full   h-full bg-gray-100">
-        <div className="h-40 bg-white shadow-md flex items-center justify-start p-4">
-          <p>Filtros</p>
+      <div className="flex flex-col w-full h-full bg-gray-100 ">
+        <div className="h-30 bg-white shadow-md flex  flex-col">
+          <div className='border bg-gray-100 p-1'>
+
+        <p className='font-semibold text-lg pb-1'>Buscar</p>
+          </div>
+          <div className='w-full p-2'>
+            <p className='font-semibold text-sm pb-1'>Localização</p>
+            <Input
+              value={locationFilter}
+              onChange={e => setLocationFilter(e.target.value)}
+              placeholder="Cidade, bairro, rua ou condomínio"
+              className=""
+            />
+          </div>
         </div>
 
-        <div className="flex flex-col gap-4 p-4  max-h-[730px] overflow-y-auto bg-gray-100">
-          {houses.map(house => (
-            <CardHouse house={house} isFavorite/>
+        <div className="flex flex-col gap-4 p-4 max-h-[730px] overflow-y-auto bg-gray-100">
+          {filteredHouses.map(house => (
+            <CardHouse house={house} isFavorite />
           ))}
         </div>
       </div>
       <div>
-        <Map houses={houses} />
+        <Map houses={filteredHouses} />
       </div>
     </div>
   )

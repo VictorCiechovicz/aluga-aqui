@@ -49,6 +49,7 @@ model House {
   description     String
   numberBedrooms  String
   numberBathrooms String
+  number          String
   createdAt       DateTime @default(now())
   updateAt        DateTime @default(now())
   userId          String   @db.ObjectId
