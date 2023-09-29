@@ -8,8 +8,6 @@ export const POST = async (request: Request) => {
   try {
     const currentUser = await getCurrentUser()
 
-
-
     if (!currentUser?.id || !currentUser.email) {
       return new NextResponse('Unauthorized', { status: 401 });
     }
@@ -24,13 +22,14 @@ export const POST = async (request: Request) => {
       description,
       numberBedrooms,
       numberBathrooms,
+      number
     } = body;
 
     if (
       !name ||
       !adress ||
       !price ||
-
+      !number ||
       !coords ||
       !description ||
       !numberBedrooms ||
@@ -50,8 +49,9 @@ export const POST = async (request: Request) => {
       data: {
         name: name,
         price: price,
-        adress: adress,
+        adress: adress, 
         coords: coords,
+        number: number,
         images: images,
         userId: currentUser.id,
         description: description,
