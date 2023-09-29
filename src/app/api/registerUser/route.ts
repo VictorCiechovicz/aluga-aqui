@@ -14,7 +14,18 @@ export async function POST(
     } = body
 
     if (!email || !name || !password) {
-      return new NextResponse('Missing info', { status: 400 })
+      return new NextResponse('Informe Email, Nome e Senha para Cadastro!', { status: 400 })
+    }
+
+
+    const existingUser = await prisma.user.findUnique({
+      where: {
+        email: email
+      }
+    })
+
+    if (existingUser) {
+      return new NextResponse('E-mail já Cadastrado!', { status: 400 })
     }
 
     const hashedPassword = await bcrypt.hash(password, 12)
@@ -29,7 +40,6 @@ export async function POST(
     return NextResponse.json(user)
   } catch (error: any) {
     console.log(error, "REGISTRATION_ERROR")
-    return new NextResponse('internal Error', { status: 500 })
-
+    return new NextResponse('Internal Error', { status: 500 })
   }
 }

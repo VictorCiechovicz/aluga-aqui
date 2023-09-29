@@ -400,7 +400,7 @@ export function AnnounceForm({ house }: AnnounceFormProps) {
               >
                 Voltar
               </Button>
-              <Button className="bg-blue-900  text-white" type="submit">
+              <Button className="bg-blue-800  text-white" type="submit">
                 Anunciar
               </Button>
             </div>

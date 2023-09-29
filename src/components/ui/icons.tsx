@@ -92,9 +92,7 @@ export const Icons = {
       viewBox="0 0 24 24"
       stroke-width="1.5"
       stroke="currentColor"
-      width="24"
-      height="24"
-      {...props}
+        {...props}
     >
       <path
         stroke-linecap="round"

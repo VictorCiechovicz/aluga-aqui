@@ -1,15 +1,17 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useSession, signOut } from 'next-auth/react'
 import { Icons } from '../ui/icons'
 
-interface ColumnProps {
+import clsx from 'clsx'
+
+interface RouteProps {
   fild: string
   path: string
 }
 
-const columnAuth = [
+const routeAuth = [
   {
     fild: 'Minha Casas',
     path: '/profile'
@@ -30,9 +32,9 @@ const columnAuth = [
     fild: ' Sair',
     path: '/announce'
   }
-] as ColumnProps[]
+] as RouteProps[]
 
-const columnNoAuth = [
+const routeNoAuth = [
   {
     fild: 'Cadastro',
     path: '/signup'
@@ -41,16 +43,17 @@ const columnNoAuth = [
     fild: 'Buscar',
     path: '/'
   }
-] as ColumnProps[]
+] as RouteProps[]
 
 export function SideBar() {
   const [isAuth, setIsAuth] = useState(false)
   const router = useRouter()
+  const pathname = usePathname()
   const session = useSession()
 
-  const columns = isAuth ? columnAuth : columnNoAuth
+  const routes = isAuth ? routeAuth : routeNoAuth
 
-  const handleColumnClick = (column: ColumnProps) => {
+  const handleColumnClick = (column: RouteProps) => {
     if (column.fild === ' Sair') {
       signOut()
     } else {
@@ -69,7 +72,7 @@ export function SideBar() {
       <div className="flex  w-52"></div>
       <div className="flex-1 flex justify-center items-center gap-2 p-4 ">
         <p className="text-white text-xl font-bold">
-          <Icons.house />
+          <Icons.house className="w-6 h-6" />
         </p>
         <p className="text-white whitespace-nowrap text-xl font-bold">
           Aluga Aqui
@@ -77,13 +80,16 @@ export function SideBar() {
       </div>
 
       <ul className="flex gap-4 text-gray-300">
-        {columns.map(column => (
+        {routes.map(rout => (
           <li
-            key={column.path}
-            onClick={() => handleColumnClick(column)}
-            className="hover:text-white rounded-lg cursor-pointer"
+            key={rout.path}
+            onClick={() => handleColumnClick(rout)}
+            className={clsx(
+              'hover:text-white rounded-lg cursor-pointer uppercase ',
+              pathname === rout.path ? 'font-bold text-white' : ''
+            )}
           >
-            {column.fild}
+            {rout.fild}
           </li>
         ))}
       </ul>

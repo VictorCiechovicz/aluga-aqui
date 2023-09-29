@@ -9,7 +9,7 @@ import Image from 'next/image'
 import UserImage from '../../../../public/images/user.png'
 
 interface AnnounceDetailsProps {
-  house?: House
+  house: House
   user?: User
 }
 
@@ -98,7 +98,7 @@ export function AnnounceDetails({ house, user }: AnnounceDetailsProps) {
 
               <div className=" pl-2 pt-10">
                 <p className="text-2xl font-semibold capitalize ">Descrição</p>
-                <p className="text-lg text-gray-500 font-normal">
+                <p className="text-base text-gray-500 font-normal text-justify py-2">
                   {house?.description}
                 </p>
               </div>
@@ -108,7 +108,8 @@ export function AnnounceDetails({ house, user }: AnnounceDetailsProps) {
                 <div className=" w-56 h-24 rounded-2xl border border-gray-900 p-2 shadow-md">
                   <p className="text-sm font-semibold">PREÇO</p>
                   <p className="text-2xl text-blue-500 font-semibold pt-1">
-                    R$ {house?.price}/Mês
+                    R$ {(parseFloat(house.price) || 0).toLocaleString('pt-BR')}
+                    /Mês
                   </p>
                 </div>
               </div>

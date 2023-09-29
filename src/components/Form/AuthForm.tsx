@@ -7,15 +7,15 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useToast } from '@/components/ui/use-toast'
-import { ToastAction } from '@radix-ui/react-toast'
 import { signIn, useSession } from 'next-auth/react'
 import axios from 'axios'
 import { useForm, FieldValues, SubmitHandler } from 'react-hook-form'
 import { useRouter } from 'next/navigation'
 
-interface AuthFormProps  {
-  mode: 'signin' | 'signup';
+interface AuthFormProps {
+  mode: 'signin' | 'signup'
 }
+
 
 export function AuthForm({ mode }: AuthFormProps) {
   const [isLoading, setIsLoading] = useState(false)
@@ -36,26 +36,24 @@ export function AuthForm({ mode }: AuthFormProps) {
 
   const onSubmit: SubmitHandler<FieldValues> = data => {
     setIsLoading(true)
+
     if (mode === 'signup') {
       axios
         .post('/api/registerUser', data)
         .then(() => {
           signIn('credentials', data)
           toast({
-            title: 'Ebaaaa...',
+            title: 'Cadastro de Usuário',
             description: 'Usuário cadastrado com sucesso!',
             variant: 'default'
           })
           router.push('/signin')
         })
-        .catch(() =>
+        .catch(error =>
           toast({
-            title: 'Oops...',
-            description: 'Não foi possível realizar cadastro',
-            variant: 'destructive',
-            action: (
-              <ToastAction altText="Tente Novamente">Tente Novamente</ToastAction>
-            )
+            title: 'Cadastro de Usuário',
+            description: error,
+            variant: 'destructive'
           })
         )
         .finally(() => setIsLoading(false))
@@ -67,15 +65,15 @@ export function AuthForm({ mode }: AuthFormProps) {
         .then(callback => {
           if (callback?.error) {
             toast({
-              title: 'Opssss...',
-              description: 'Não foi possível realizar Login!',
+              title: 'Login de Usuário',
+              description: callback?.error,
               variant: 'destructive'
             })
           }
 
           if (callback?.ok && !callback?.error) {
             toast({
-              title: 'Ebaaaa...',
+              title: 'Login de Usuário',
               description: 'Login realizado!',
               variant: 'default'
             })
@@ -119,7 +117,7 @@ export function AuthForm({ mode }: AuthFormProps) {
   }, [session?.status, router])
 
   return (
-    <div className={cn('grid gap-6')} >
+    <div className={cn('grid gap-6')}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="grid gap-2">
           <div className="grid gap-1">
@@ -151,6 +149,7 @@ export function AuthForm({ mode }: AuthFormProps) {
               disabled={isLoading}
               {...register('email', { required: true })}
             />
+        
             <Label className="sr-only" htmlFor="password">
               Senha
             </Label>
@@ -164,7 +163,7 @@ export function AuthForm({ mode }: AuthFormProps) {
               {...register('password', { required: true })}
             />
           </div>
-          <Button disabled={isLoading}>
+          <Button disabled={isLoading} className="bg-blue-800">
             {isLoading && (
               <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
             )}
