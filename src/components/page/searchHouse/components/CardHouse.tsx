@@ -120,7 +120,7 @@ export default function CardHouse({
             </p>
           </div>
 
-          <div className="flex gap-4">
+          <div className="flex gap-4 mt-4">
             <div className="flex gap-2 items-center">
               <div className="bg-blue-100 w-7 h-6 rounded-sm justify-center items-center flex">
                 <Icons.bed />

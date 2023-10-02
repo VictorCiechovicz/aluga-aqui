@@ -31,7 +31,7 @@ export function FavoriteList() {
     }
 
     fetchFavoritedHouses()
-  }, [])
+  }, [favoritedHouses])
 
   return (
     <div className="p-4 bg-gray-100 h-screen flex justify-center">
@@ -39,14 +39,14 @@ export function FavoriteList() {
         <div className="mb-4">
           <p className="font-semibold text-2xl">Imóveis Favoritos</p>
         </div>
-        {favoritedHouses ? (
-          <div className="flex flex-col gap-4 p-4  max-h-[730px] overflow-y-auto bg-gray-100">
+        {favoritedHouses.length>0 ? (
+          <div className="flex flex-col gap-4 p-4    bg-gray-100">
             {favoritedHouses.map(house => (
               <CardHouse key={house.id} house={house} isFavorite />
             ))}
           </div>
         ) : (
-          <div className="flex flex-col gap-4 p-4  max-h-[730px] overflow-y-auto bg-gray-100">
+          <div className="flex justify-center gap-4 p-4 h-screen  ">
             <p>Sem nenhuma casa favoritada</p>
           </div>
         )}

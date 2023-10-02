@@ -68,7 +68,8 @@ export function AnnounceForm({ house }: AnnounceFormProps) {
       price: house?.price || '',
       description: house?.description || '',
       numberBedrooms: house?.numberBedrooms || '',
-      numberBathrooms: house?.numberBathrooms || ''
+      numberBathrooms: house?.numberBathrooms || '',
+      number: house?.number || ''
     }
   })
 
@@ -76,7 +77,7 @@ export function AnnounceForm({ house }: AnnounceFormProps) {
   const router = useRouter()
 
   async function getCoordinatesFromAddress(address: any) {
-    const apiKey = 'AIzaSyCXPvOLnd7oa9Hz-NZBu-f4QkkXifNBn9I'
+    const apiKey = process.env.NEXT_PUBLIC_GOOGLE_API_KEY
     const response = await fetch(
       `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
         address
@@ -125,21 +126,16 @@ export function AnnounceForm({ house }: AnnounceFormProps) {
         .put(`/api/house/${data.id}`, infos)
         .then(() => {
           toast({
-            title: 'Casa Modifcada',
+            title: 'Casa Atualizada',
             description: 'Anuncio atualizado com sucesso!',
             variant: 'default'
           })
         })
         .catch(() =>
           toast({
-            title: 'Casa Deletada',
+            title: 'Casa não Atualizada',
             description: 'Não foi possível atualizar o anuncio!',
-            variant: 'destructive',
-            action: (
-              <ToastAction altText="Tente Novamente">
-                Tente Novamente
-              </ToastAction>
-            )
+            variant: 'destructive'
           })
         )
         .finally(() => {
@@ -147,6 +143,7 @@ export function AnnounceForm({ house }: AnnounceFormProps) {
         })
     }
   }
+
   const onSubmit = async (data: FormValues) => {
     if (imagesUrl.length < 10) {
       const coords = await getCoordinatesFromAddress(data.location)
@@ -158,7 +155,7 @@ export function AnnounceForm({ house }: AnnounceFormProps) {
           adress: coords.address,
           coords: String(coords.location),
           images: imagesUrl,
-          number:data.number,
+          number: data.number,
           description: data.description,
           numberBedrooms: data.numberBedrooms,
           numberBathrooms: data.numberBathrooms
