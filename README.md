@@ -1,6 +1,6 @@
-![Developed Web by Victor Ciechovicz](https://github.com/VictorCiechovicz/next-auth-prisma/assets/106246945/388ee6cf-a445-44e6-9b1b-52037a2e2cea)
+![Developed Web by Victor Ciechovicz (1)](https://github.com/VictorCiechovicz/aluga-aqui/assets/106246945/58c5c47d-1749-4781-a869-5986eac8a6c9)
 
-# ****📍🏠 Next Auth****
+# ****📍🏠 Aluga Aqui****
 
 
 This application is project to rent house using Next.js 13, React Leaflet, Next Cloudinary, Prisma, MongoDb and Next Auth. This application was created for the purpose of studies.
