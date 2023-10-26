@@ -1,5 +1,6 @@
 import { AnnounceDetails } from '@/components/page/announce/Details'
 import axios from 'axios'
+import { getHouseDetails } from '../../../services/callApi'
 
 interface DetailsAnnounceProps {
   params: {
@@ -12,7 +13,7 @@ export default async function DetailsAnnounce({
 }: DetailsAnnounceProps) {
   const houseId = params.id
 
-  const houses = await axios.get(`http://localhost:3000/api/house/${houseId}`)
+  const houses = await getHouseDetails(houseId)
 
   return (
     <div>

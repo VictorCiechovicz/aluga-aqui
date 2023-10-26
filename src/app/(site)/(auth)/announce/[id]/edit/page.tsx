@@ -1,5 +1,5 @@
 import { AnnounceForm } from '@/components/page'
-import axios from 'axios'
+import { getHouseById } from '../../../services/callApi'
 
 interface EditAnnounceProps {
   params: {
@@ -10,7 +10,7 @@ interface EditAnnounceProps {
 export default async function EditAnnounce({ params }: EditAnnounceProps) {
   const houseId = params.id
 
-  const houses = await axios.get(`http://localhost:3000/api/house/${houseId}`)
+  const houses = await getHouseById(houseId)
 
   return (
     <div>
