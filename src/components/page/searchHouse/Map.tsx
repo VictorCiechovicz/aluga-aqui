@@ -1,5 +1,3 @@
-'use client'
-
 import { MapContainer, Marker, TileLayer } from 'react-leaflet'
 import { Popup } from 'react-leaflet'
 
