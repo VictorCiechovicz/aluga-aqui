@@ -1,8 +1,8 @@
 import { SearchList } from '@/components/page'
-import axios from 'axios'
+import { getHouses } from './services/callApi'
 
 export default async function SearchHouse() {
-  const houses = await axios.get('http://localhost:3000/api/house')
+  const houses = await getHouses()
 
   return (
     <div>

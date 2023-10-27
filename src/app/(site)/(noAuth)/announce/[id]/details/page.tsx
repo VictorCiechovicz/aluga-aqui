@@ -1,3 +1,4 @@
+import { getHouseDetails } from '@/app/(site)/services/callApi'
 import { AnnounceDetails } from '@/components/page/announce/Details'
 
 interface DetailsAnnounceProps {
@@ -11,11 +12,11 @@ export default async function DetailsAnnounce({
 }: DetailsAnnounceProps) {
   const houseId = params.id
 
-  const houses = []
+  const houses = await getHouseDetails(houseId)
 
   return (
     <div>
-      <AnnounceDetails house={[] as any} user={[] as any} />
+      <AnnounceDetails house={houses.data} user={houses.data.user} />
     </div>
   )
 }
