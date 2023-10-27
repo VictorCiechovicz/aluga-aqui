@@ -17,7 +17,7 @@ export function FavoriteList() {
           )
 
           if (favoritedHouseIds.length > 0) {
-            const response = await axios.get(`http://localhost:3000/api/house`)
+            const response = await axios.get(`/api/house`)
             const allHouses = response.data
             const filteredHouses = allHouses.filter((house: House) =>
               favoritedHouseIds.includes(house.id)
