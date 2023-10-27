@@ -1,27 +1,26 @@
-'use client'
+
 import axios from "axios";
 
 
 export async function getHouses() {
-  const houses = await axios.get('/api/house')
+  const houses =[] as any
   return houses;
 }
 
 
 export async function getHouseById(houseId: string) {
-  const house = await axios.get(`/api/house/${houseId}`)
+  const house = [] as any
   return house;
 }
 
 
 export async function getHousesUser(userId?: string) {
-  const houses = await axios.get(`/api/house/user/${userId}`)
+  const houses = [] as any
   return houses;
 }
 
 
 export async function getHouseDetails(houseId: string) {
-  const houses = await axios.get(`/api/house/${houseId}`)
+  const houses = [] as any
   return houses;
 }
-
