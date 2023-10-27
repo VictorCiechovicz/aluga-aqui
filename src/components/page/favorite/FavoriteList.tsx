@@ -20,7 +20,7 @@ export function FavoriteList() {
             const response = await axios.get(`/api/house`)
             const allHouses = response.data
             const filteredHouses = allHouses.filter((house: House) =>
-              favoritedHouseIds.includes(house.id)
+              favoritedHouseIds.includes(house.id)??[]
             )
             setFavoritedHouses(filteredHouses)
           }

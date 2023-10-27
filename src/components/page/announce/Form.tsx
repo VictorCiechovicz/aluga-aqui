@@ -104,9 +104,11 @@ export function AnnounceForm({ house }: AnnounceFormProps) {
       setImagesUrl(prevUrls => [...prevUrls, url])
     }
   }
+  
   const handleRemoveImage = (result: any) => {
-    setImagesUrl(prevUrls => prevUrls.filter(url => url !== result))
-  }
+    setImagesUrl(prevUrls => prevUrls?.filter(url => url !== result) ?? []);
+  };
+  
 
   const handleUpdateHouse = async (data: House) => {
     const coords = await getCoordinatesFromAddress(data.adress)

@@ -65,9 +65,8 @@ export default function CardHouse({
     )
 
     if (favoritedHouses.includes(house.id)) {
-      const updatedFavoritedHouses = favoritedHouses.filter(
-        (id: any) => id !== house.id
-      )
+      const updatedFavoritedHouses =
+        favoritedHouses.filter((id: any) => id !== house.id) ?? []
       localStorage.setItem(
         'favoritedHouses',
         JSON.stringify(updatedFavoritedHouses)
