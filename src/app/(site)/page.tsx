@@ -1,3 +1,4 @@
+'use client'
 import { SearchList } from '@/components/page'
 import { getHouses } from './services/callApi'
 
