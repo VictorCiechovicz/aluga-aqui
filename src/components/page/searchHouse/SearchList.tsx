@@ -13,8 +13,9 @@ export interface SearchListProps {
 export function SearchList({ houses }: SearchListProps) {
   const [locationFilter, setLocationFilter] = useState('')
 
-  const filteredHouses = houses.filter(house =>
-    house.adress.toLowerCase().includes(locationFilter.toLowerCase())??[]
+  const filteredHouses = houses.filter(
+    house =>
+      house.adress.toLowerCase().includes(locationFilter.toLowerCase()) ?? []
   )
 
   const Map = dynamic(() => import('./Map'), { ssr: false })
