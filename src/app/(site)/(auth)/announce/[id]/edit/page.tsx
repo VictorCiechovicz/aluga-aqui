@@ -1,5 +1,4 @@
 import { AnnounceForm } from '@/components/page'
-import { getHouseById } from '../../../services/callApi'
 
 interface EditAnnounceProps {
   params: {
@@ -10,11 +9,11 @@ interface EditAnnounceProps {
 export default async function EditAnnounce({ params }: EditAnnounceProps) {
   const houseId = params.id
 
-  const houses = await getHouseById(houseId)
+  const houses = []
 
   return (
     <div>
-      <AnnounceForm house={houses.data} />
+      <AnnounceForm house={[] as any} />
     </div>
   )
 }
