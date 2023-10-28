@@ -1,3 +1,4 @@
+'use client'
 import getCurrentUser from '@/actions/getCurrentUser'
 import { ProfileList } from '@/components/page/profile/ProfileList'
 import { getHousesUser } from '../../services/callApi'

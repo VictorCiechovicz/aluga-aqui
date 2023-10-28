@@ -1,3 +1,4 @@
+'use client'
 import { getHouseDetails } from '@/app/(site)/services/callApi'
 import { AnnounceDetails } from '@/components/page/announce/Details'
 
