@@ -8,6 +8,7 @@ import { useToast } from '@/components/ui/use-toast'
 import { useRouter } from 'next/navigation'
 import { Tooltip } from 'react-tooltip'
 import { useEffect, useState } from 'react'
+import { useSession } from 'next-auth/react'
 
 interface CardHouseProps {
   house: House
@@ -21,8 +22,10 @@ export default function CardHouse({
   isFavorite
 }: CardHouseProps) {
   const [isFavorited, setIsFavorited] = useState(false)
+
   const { toast } = useToast()
   const router = useRouter()
+  const session = useSession()
 
   const handleDetailsHouse = (houseId: string) => {
     router.push(`/announce/${houseId}/details`)
@@ -153,7 +156,7 @@ export default function CardHouse({
         </div>
       </div>
 
-      {isFavorite && (
+      {isFavorite  && session.data && (
         <div>
           <div className="flex gap-4">
             <div

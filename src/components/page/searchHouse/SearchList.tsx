@@ -6,6 +6,7 @@ import { useState } from 'react'
 import { Input } from '@/components/ui/input'
 import dynamic from 'next/dynamic'
 
+
 export interface SearchListProps {
   houses: House[]
 }
@@ -13,12 +14,14 @@ export interface SearchListProps {
 export function SearchList({ houses }: SearchListProps) {
   const [locationFilter, setLocationFilter] = useState('')
 
+
   const filteredHouses = houses.filter(
     house =>
       house.adress.toLowerCase().includes(locationFilter.toLowerCase()) ?? []
   )
 
   const Map = dynamic(() => import('./Map'), { ssr: false })
+  
   return (
     <div className="flex justify-between">
       <div className="flex flex-col w-full h-full bg-gray-100 ">

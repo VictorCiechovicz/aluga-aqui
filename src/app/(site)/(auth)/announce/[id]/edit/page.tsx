@@ -1,6 +1,4 @@
-'use client'
 import { getHouseById } from '@/app/(site)/services/callApi'
-
 import { AnnounceForm } from '@/components/page'
 
 interface EditAnnounceProps {
